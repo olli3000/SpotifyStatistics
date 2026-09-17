@@ -1,9 +1,15 @@
 #pragma once
 
 #include <string_view>
+#include <chrono>
 
 namespace statistics
 {
+    struct TimeRange {
+        std::chrono::system_clock::time_point begin;
+        std::chrono::system_clock::time_point end;
+    };
+
     struct SongRankingEntry {
         std::string_view id;
         std::string_view title;

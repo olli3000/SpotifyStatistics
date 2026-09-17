@@ -15,6 +15,21 @@ namespace statistics
         updateMinMaxTotalAvg(instance);
     }
 
+    std::span<const JsonDataEntry> SongHistory::getSpanFromTimeRange(const TimeRange& range) const
+    {
+        auto begin = std::lower_bound(_instances.begin(), _instances.end(), range.begin, 
+        [](const JsonDataEntry& entry, const auto& timestamp) {
+            return entry.ts < timestamp;
+        });
+
+        auto end = std::upper_bound(_instances.begin(), _instances.end(), range.end, 
+        [](const auto& timestamp, const JsonDataEntry& entry) {
+            return timestamp < entry.ts;
+        });
+
+        return {begin, end};
+    }
+
     void SongHistory::updateMinMaxTotalAvg(JsonDataEntry& instance) {
         if (_min == -1 || instance.ms_played < _instances[_min].ms_played) _min = size() - 1;
         if (_max == -1 || instance.ms_played > _instances[_max].ms_played) _max = size() - 1;
@@ -66,4 +81,5 @@ namespace statistics
         // return std::to_string(_instances.size());
         return (_id + " - ").append(getArtist()).append(" - ").append(getTitle()).append(" - ").append(getAlbum()).append(" - ").append(std::to_string(_total));
     }
+    
 } // namespace statistics

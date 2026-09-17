@@ -12,6 +12,7 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Charts)
 
 set(FILES
+    src/statistics/data_frame_view.cpp
     src/statistics/data_frame.cpp
     src/statistics/song_history.cpp
 

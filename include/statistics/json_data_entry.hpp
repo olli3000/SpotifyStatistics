@@ -1,5 +1,8 @@
 #pragma once
 
+#include <chrono>
+#include <iostream>
+#include <sstream>
 #include <string>
 #include <nlohmann/json.hpp>
 
@@ -8,7 +11,7 @@ using json = nlohmann::json;
 namespace statistics
 {
     struct JsonDataEntry {
-        std::string ts;
+        std::chrono::system_clock::time_point ts;
         std::string platform;
         int ms_played;
         // std::string conn_country;
@@ -45,7 +48,23 @@ namespace statistics
 
     inline void from_json(const json& j, JsonDataEntry& d) {
         if (!j.at("ts").is_null()) {
-            j.at("ts").get_to(d.ts);
+            std::string temp_ts;
+            j.at("ts").get_to(temp_ts);
+
+            int year;
+            unsigned month, day, hour, minute, second;
+            std::sscanf(temp_ts.c_str(), "%d-%u-%uT%u:%u:%uZ", &year, &month, &day, &hour, &minute, &second);
+            
+            auto date = std::chrono::year_month_day{
+                std::chrono::year{year}, 
+                std::chrono::month{month}, 
+                std::chrono::day{day}
+            };
+
+            d.ts = std::chrono::sys_days{date} 
+                + std::chrono::hours{hour} 
+                + std::chrono::minutes{minute} 
+                + std::chrono::seconds{second};
         }
         if (!j.at("platform").is_null()) {
             j.at("platform").get_to(d.platform);
