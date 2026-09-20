@@ -10,13 +10,18 @@
 
 namespace statistics
 {
+    struct SongHistoryView {
+        std::span<const JsonDataEntry> rangeHistory;
+        long total = 0;
+    };
+
     class SongHistory {
     public:
         SongHistory(JsonDataEntry&& firstInstance);
 
         void addInstance(JsonDataEntry&& instance);
 
-        std::span<const JsonDataEntry> getSpanFromTimeRange(const TimeRange& range) const;
+        SongHistoryView getSpanFromTimeRange(const TimeRange& range) const;
         
         std::string_view getID() const;
         std::string_view getTitle() const;
@@ -38,7 +43,7 @@ namespace statistics
 
         int _min = -1;
         int _max = -1;
-        int _total = 0;
+        long _total = 0;
         double _avg = 0.0;
 
         void updateMinMaxTotalAvg(JsonDataEntry& instance);

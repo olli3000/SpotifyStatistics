@@ -2,7 +2,7 @@
 
 #include <QWidget>
 
-#include "statistics/data_frame.hpp"
+#include "statistics/data_frame_view.hpp"
 
 namespace ui
 {
@@ -10,7 +10,7 @@ namespace ui
         Q_OBJECT
 
     public:
-        explicit TotalStatsOverview(statistics::DataFrame& data, QWidget* parent = nullptr);
+        explicit TotalStatsOverview(statistics::DataFrameView& data, QWidget* parent = nullptr);
 
     signals:
         void clicked();

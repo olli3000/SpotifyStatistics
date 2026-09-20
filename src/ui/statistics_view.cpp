@@ -10,7 +10,7 @@
 
 namespace ui
 {
-    StatisticsView::StatisticsView(statistics::DataFrame& data, QWidget* parent) 
+    StatisticsView::StatisticsView(statistics::DataFrameView& data, QWidget* parent) 
         : QWidget(parent), m_data(data) {
 
         m_stack = new QStackedWidget(this);

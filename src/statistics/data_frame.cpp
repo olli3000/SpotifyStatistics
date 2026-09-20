@@ -26,51 +26,9 @@ namespace statistics
     }
 
     // public
-    
-    int DataFrame::getNumberOfSongs() const {
-        return _songData.size();
-    }
 
-    int DataFrame::getNumberOfArtists() const {
-        return _artistToSongMapping.size();
-    }
-
-    long DataFrame::getTotalStreamingTime() const {
-        long totalTime = 0;
-        for (auto& pair : _songData) {
-            totalTime += pair.second.total();
-        }
-        return totalTime;
-    }
-
-    std::vector<ArtistRankingEntry> DataFrame::getArtistsRanked() const {
-        std::vector<ArtistRankingEntry> vec;
-        for (auto& [name, songs] : _artistToSongMapping) {
-            long time = 0;
-            for (auto& song : songs) {
-                time += _songData.at(song).total();
-            }
-            vec.emplace_back(name, time);
-        }
-
-        std::sort(vec.begin(), vec.end(), [](const auto& a, const auto& b) {
-            return a.listeningTime > b.listeningTime;
-        });
-
-        return vec;
-    }
-
-    std::vector<SongRankingEntry> DataFrame::getSongsRanked() const {
-        std::vector<SongRankingEntry> vec;
-        for (auto& [id, history] : _songData) {
-            vec.emplace_back(history.getID(), history.getTitle(), history.getArtist(), history.total());
-        }
-
-        std::sort(vec.begin(), vec.end(), [](const auto& a, const auto& b) {
-            return a.listeningTime > b.listeningTime;
-        });
-
-        return vec;
+    TimeRange DataFrame::getFullTimeRange() const {
+        return {m_historyBegin, m_historyEnd};
     }
 
     // private
@@ -78,22 +36,29 @@ namespace statistics
     void DataFrame::addStreamingHistory(json& data) {
         std::vector<statistics::JsonDataEntry> list = data.get<std::vector<statistics::JsonDataEntry>>();
 
+        if (!m_isHistoryBeginSet) {
+            m_historyBegin = list.front().ts;
+            m_isHistoryBeginSet = true;
+        }
+
         for (auto& entry : list) {
             std::string id = entry.getID();
             {
-                auto [it, inserted] = _songData.try_emplace(id, std::move(entry));
+                auto [it, inserted] = m_songData.try_emplace(id, std::move(entry));
                 if (!inserted) {
                     it->second.addInstance(std::move(entry));
                 }
             }
         }
+
+        m_historyEnd = list.back().ts;
     }
 
     void DataFrame::linkArtistsAndAlbumsToSongs() {
-        for (auto& [id, history] : _songData) {
+        for (auto& [id, history] : m_songData) {
             {
                 std::string artistName{history.getArtist()};
-                auto [it, inserted] = _artistToSongMapping.try_emplace(artistName, std::vector<std::string>{id});
+                auto [it, inserted] = m_artistToSongMapping.try_emplace(artistName, std::vector<std::string>{id});
                 if (!inserted) {
                     it->second.push_back(id);
                 }
@@ -101,7 +66,7 @@ namespace statistics
 
             {
                 std::string albumName{history.getAlbum()};
-                auto [it, inserted] = _albumToSongMapping.try_emplace(albumName, std::vector<std::string>{id});
+                auto [it, inserted] = m_albumToSongMapping.try_emplace(albumName, std::vector<std::string>{id});
                 if (!inserted) {
                     it->second.push_back(id);
                 }

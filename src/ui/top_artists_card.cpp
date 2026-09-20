@@ -8,7 +8,7 @@
 
 namespace ui
 {
-    TopArtistsCard::TopArtistsCard(statistics::DataFrame& data, int stackIndex, QWidget* parent) 
+    TopArtistsCard::TopArtistsCard(statistics::DataFrameView& data, int stackIndex, QWidget* parent) 
         : QWidget(parent), m_stackIndex(stackIndex) {
 
         QVBoxLayout* mainLayout = new QVBoxLayout(this);

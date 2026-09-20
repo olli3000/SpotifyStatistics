@@ -15,7 +15,7 @@ namespace statistics
         updateMinMaxTotalAvg(instance);
     }
 
-    std::span<const JsonDataEntry> SongHistory::getSpanFromTimeRange(const TimeRange& range) const
+    SongHistoryView SongHistory::getSpanFromTimeRange(const TimeRange& range) const
     {
         auto begin = std::lower_bound(_instances.begin(), _instances.end(), range.begin, 
         [](const JsonDataEntry& entry, const auto& timestamp) {
@@ -27,7 +27,18 @@ namespace statistics
             return timestamp < entry.ts;
         });
 
-        return {begin, end};
+        if (begin == _instances.end()) {
+            return {std::span<JsonDataEntry, 0>(), 0};
+        }
+
+        std::span<const JsonDataEntry> rangeHistory{begin, end};
+        long total = 0;
+
+        for (auto& instance : rangeHistory) {
+            total += instance.ms_played;
+        }
+
+        return {rangeHistory, total};
     }
 
     void SongHistory::updateMinMaxTotalAvg(JsonDataEntry& instance) {

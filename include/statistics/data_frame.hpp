@@ -17,20 +17,19 @@ namespace statistics
         DataFrame(char* pathToDir);
 
         void print();
+
+        TimeRange getFullTimeRange() const;
         
-        int getNumberOfSongs() const;
-        int getNumberOfArtists() const;
-        long getTotalStreamingTime() const;
-
-        std::vector<ArtistRankingEntry> getArtistsRanked() const;
-        std::vector<SongRankingEntry> getSongsRanked() const;
-
     private:
         friend class DataFrameView;
     
-        std::unordered_map<std::string, SongHistory> _songData;
-        std::unordered_map<std::string, std::vector<std::string>> _artistToSongMapping;
-        std::unordered_map<std::string, std::vector<std::string>> _albumToSongMapping;
+        std::unordered_map<std::string, SongHistory> m_songData;
+        std::unordered_map<std::string, std::vector<std::string>> m_artistToSongMapping;
+        std::unordered_map<std::string, std::vector<std::string>> m_albumToSongMapping;
+
+        std::chrono::system_clock::time_point m_historyBegin;
+        std::chrono::system_clock::time_point m_historyEnd;
+        bool m_isHistoryBeginSet;
 
         void addStreamingHistory(json& data);
         void linkArtistsAndAlbumsToSongs();

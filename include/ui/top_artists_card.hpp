@@ -2,7 +2,7 @@
 
 #include <QWidget>
 
-#include "statistics/data_frame.hpp"
+#include "statistics/data_frame_view.hpp"
 
 namespace ui
 {
@@ -10,7 +10,7 @@ namespace ui
         Q_OBJECT
 
     public:
-        explicit TopArtistsCard(statistics::DataFrame& data, int stackIndex, QWidget* parent = nullptr);
+        explicit TopArtistsCard(statistics::DataFrameView& data, int stackIndex, QWidget* parent = nullptr);
 
     signals:
         void cardClicked(int index);

@@ -8,7 +8,7 @@
 
 namespace ui {
 
-    TotalStatsOverview::TotalStatsOverview(statistics::DataFrame& data, QWidget* parent) : QWidget(parent) {
+    TotalStatsOverview::TotalStatsOverview(statistics::DataFrameView& data, QWidget* parent) : QWidget(parent) {
 
         QHBoxLayout* mainLayout = new QHBoxLayout(this);
         mainLayout->setContentsMargins(20, 20, 20, 20);
