@@ -19,14 +19,12 @@ set(FILES
     include/ui/main_window.hpp # else AUTOMOC has some skill issue
     include/ui/total_stats_overview.hpp
     include/ui/statistics_view.hpp
-    include/ui/top_songs_card.hpp
-    include/ui/top_artists_card.hpp
+    include/ui/small_view_card.hpp
 
     src/ui/main_window.cpp
     src/ui/total_stats_overview.cpp
     src/ui/statistics_view.cpp
-    src/ui/top_songs_card.cpp
-    src/ui/top_artists_card.cpp
+    src/ui/small_view_card.cpp
 
     resources/resources.qrc
 )

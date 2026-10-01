@@ -6,6 +6,7 @@ namespace statistics
 {
     class DataFrameView {
     public:
+        DataFrameView(const DataFrame& data) : DataFrameView(data, data.getFullTimeRange()) {}
         DataFrameView(const DataFrame& data, const TimeRange& range);
 
         int getNumberOfSongs() const;

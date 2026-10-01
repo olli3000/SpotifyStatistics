@@ -1,5 +1,6 @@
 #include "ui/main_window.hpp"
 
+#include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -23,11 +24,7 @@ namespace ui
 
         m_title = new QLabel("Spotify Statistics");
 
-        // statistics::DataFrameView view{data, 
-        //     statistics::TimeRange{std::chrono::sys_days{std::chrono::year_month_day{floor<std::chrono::days>(std::chrono::system_clock::now())} - std::chrono::months{12}}, 
-        //     std::chrono::system_clock::now()}
-        // };
-        statistics::DataFrameView view{data, data.getFullTimeRange()};
+        statistics::DataFrameView view{data};
         
         TotalStatsOverview* statsCard = new TotalStatsOverview(view, this);
         StatisticsView* statisticsView = new StatisticsView(view, this);

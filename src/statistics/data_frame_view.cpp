@@ -18,9 +18,6 @@ namespace statistics
             if (span.rangeHistory.empty()) continue;
             
             m_songRanges.emplace(ID, history.getSpanFromTimeRange(range));
-            // if (ID == "61ZM92T2zaXIVsqncThQzC") {
-                
-            // }
         }
 
         if (range.begin <= data.m_historyBegin 

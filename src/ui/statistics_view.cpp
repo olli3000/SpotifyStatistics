@@ -5,8 +5,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-#include "ui/top_songs_card.hpp"
-#include "ui/top_artists_card.hpp"
+#include "ui/small_view_card.hpp"
+#include "statistics/util.hpp"
 
 namespace ui
 {
@@ -33,14 +33,17 @@ namespace ui
         smallViewLayout->setContentsMargins(20, 20, 20, 20);
         smallViewLayout->setSpacing(16);
 
-        TopSongsCard* topSongsCard = new TopSongsCard(m_data, 1);
-        TopArtistsCard* topArtistsCard = new TopArtistsCard(m_data, 2);
+        SmallViewCard* topSongsCard = new SmallViewCard(m_data, "Top Songs", 1);
+        SmallViewCard* topArtistsCard = new SmallViewCard(m_data, "Top Artists", 2);
+
+        topSongsCard->fillData(m_data.getSongsRanked(), [](const statistics::SongRankingEntry& entry) {return entry.title;});
+        topArtistsCard->fillData(m_data.getArtistsRanked(), [](const statistics::ArtistRankingEntry& entry) {return entry.name;});
 
         smallViewLayout->addWidget(topSongsCard);
         smallViewLayout->addWidget(topArtistsCard);
 
-        connect(topSongsCard, &TopSongsCard::cardClicked, this, &StatisticsView::switchView);
-        connect(topArtistsCard, &TopArtistsCard::cardClicked, this, &StatisticsView::switchView);
+        connect(topSongsCard, &SmallViewCard::cardClicked, this, &StatisticsView::switchView);
+        connect(topArtistsCard, &SmallViewCard::cardClicked, this, &StatisticsView::switchView);
     }
 
     void StatisticsView::switchView(int index) {
