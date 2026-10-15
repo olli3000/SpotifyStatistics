@@ -27,7 +27,7 @@ namespace ui
         statistics::DataFrameView view{data};
         
         TotalStatsOverview* statsCard = new TotalStatsOverview(view, this);
-        StatisticsView* statisticsView = new StatisticsView(view, this);
+        StatisticsView* statisticsView = new StatisticsView(data, this);
         
         mainLayout->addWidget(m_title);
         mainLayout->addWidget(statsCard);

@@ -27,8 +27,8 @@ namespace statistics
         std::unordered_map<std::string, std::vector<std::string>> m_artistToSongMapping;
         std::unordered_map<std::string, std::vector<std::string>> m_albumToSongMapping;
 
-        std::chrono::system_clock::time_point m_historyBegin;
-        std::chrono::system_clock::time_point m_historyEnd;
+        std::chrono::sys_seconds m_historyBegin;
+        std::chrono::sys_seconds m_historyEnd;
         bool m_isHistoryBeginSet;
 
         void addStreamingHistory(json& data);

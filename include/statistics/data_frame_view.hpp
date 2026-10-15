@@ -14,7 +14,8 @@ namespace statistics
         long getTotalStreamingTime() const;
 
         std::vector<SongRankingEntry> getSongsRanked() const;
-        std::vector<ArtistRankingEntry> getArtistsRanked() const;
+        std::vector<ListeningTimeRankingEntry> getArtistsRanked() const;
+        std::vector<ListeningTimeRankingEntry> getAlbumsRanked() const;
 
     private:
         const DataFrame& m_data;
@@ -23,6 +24,9 @@ namespace statistics
         std::unordered_map<std::string, SongHistoryView> m_songRanges;
 
         bool m_coversAllData;
+
+        std::vector<ListeningTimeRankingEntry> getListeningTimeRankingFromMap(
+            const std::unordered_map<std::string, std::vector<std::string>>& map) const;
     };
     
 } // namespace statistics

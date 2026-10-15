@@ -6,8 +6,8 @@
 namespace statistics
 {
     struct TimeRange {
-        std::chrono::system_clock::time_point begin;
-        std::chrono::system_clock::time_point end;
+        std::chrono::sys_seconds begin;
+        std::chrono::sys_seconds end;
     };
 
     struct SongRankingEntry {
@@ -17,7 +17,7 @@ namespace statistics
         long listeningTime;
     };
 
-    struct ArtistRankingEntry {
+    struct ListeningTimeRankingEntry {
         std::string_view name;
         long listeningTime;
     };

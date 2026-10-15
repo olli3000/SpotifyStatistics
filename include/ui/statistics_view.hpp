@@ -2,7 +2,7 @@
 
 #include <QWidget>
 
-#include "statistics/data_frame_view.hpp"
+#include "statistics/data_frame.hpp"
 
 class QStackedWidget;
 namespace ui
@@ -11,7 +11,7 @@ namespace ui
         Q_OBJECT
 
     public:
-        explicit StatisticsView(statistics::DataFrameView& data, QWidget* parent = nullptr);
+        explicit StatisticsView(statistics::DataFrame& data, QWidget* parent = nullptr);
 
     public slots:
         void switchView(int index);
@@ -19,7 +19,7 @@ namespace ui
     private:
         void createSmallView(QWidget* smallView);
 
-        statistics::DataFrameView& m_data;
+        statistics::DataFrame& m_data;
         QStackedWidget* m_stack;
     };
 

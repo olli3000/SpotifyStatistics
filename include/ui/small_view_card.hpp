@@ -12,7 +12,7 @@ namespace ui
         Q_OBJECT
 
     public:
-        explicit SmallViewCard(statistics::DataFrameView& data, const QString& title, int stackIndex, QWidget* parent = nullptr);
+        explicit SmallViewCard(const QString& title, int stackIndex, QWidget* parent = nullptr);
 
         template <typename Entry, typename GetName>
         void fillData(std::vector<Entry> entries, GetName getName) {

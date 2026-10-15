@@ -20,11 +20,13 @@ set(FILES
     include/ui/total_stats_overview.hpp
     include/ui/statistics_view.hpp
     include/ui/small_view_card.hpp
+    include/ui/small_time_graph.hpp
 
     src/ui/main_window.cpp
     src/ui/total_stats_overview.cpp
     src/ui/statistics_view.cpp
     src/ui/small_view_card.cpp
+    src/ui/small_time_graph.cpp
 
     resources/resources.qrc
 )

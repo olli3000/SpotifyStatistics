@@ -11,7 +11,7 @@ using json = nlohmann::json;
 namespace statistics
 {
     struct JsonDataEntry {
-        std::chrono::system_clock::time_point ts;
+        std::chrono::sys_seconds ts;
         std::string platform;
         int ms_played;
         // std::string conn_country;

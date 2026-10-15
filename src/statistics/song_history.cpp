@@ -19,7 +19,7 @@ namespace statistics
     {
         auto begin = std::lower_bound(_instances.begin(), _instances.end(), range.begin, 
         [](const JsonDataEntry& entry, const auto& timestamp) {
-            return entry.ts < timestamp;
+            return entry.ts <= timestamp;
         });
 
         auto end = std::upper_bound(_instances.begin(), _instances.end(), range.end, 

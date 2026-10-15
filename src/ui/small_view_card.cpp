@@ -7,7 +7,7 @@
 
 namespace ui
 {
-    SmallViewCard::SmallViewCard(statistics::DataFrameView& data, const QString& title, int stackIndex, QWidget* parent) 
+    SmallViewCard::SmallViewCard(const QString& title, int stackIndex, QWidget* parent) 
         : QWidget(parent), m_stackIndex(stackIndex) {
 
         QVBoxLayout* mainLayout = new QVBoxLayout(this);
@@ -26,8 +26,8 @@ namespace ui
         QWidget* card = new QWidget();
 
         QHBoxLayout* layout = new QHBoxLayout(card);
-        layout->setContentsMargins(20, 20, 20, 20);
-        layout->setSpacing(16);
+        // layout->setContentsMargins(20, 20, 20, 20);
+        // layout->setSpacing(16);
 
         layout->addWidget(new QLabel(std::to_string(place).data(), card));
         layout->addWidget(new QLabel(name.data(), card));

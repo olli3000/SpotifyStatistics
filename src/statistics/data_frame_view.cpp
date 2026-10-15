@@ -74,10 +74,12 @@ namespace statistics
         return vec;
     }
 
-    std::vector<ArtistRankingEntry> DataFrameView::getArtistsRanked() const {
-        std::vector<ArtistRankingEntry> vec;
+    std::vector<ListeningTimeRankingEntry> DataFrameView::getListeningTimeRankingFromMap(
+        const std::unordered_map<std::string, std::vector<std::string>>& map) const {
 
-        for (auto& [name, songs] : m_data.m_artistToSongMapping) {
+        std::vector<ListeningTimeRankingEntry> vec;
+
+        for (auto& [name, songs] : map) {
             long time = 0;
             
             for (auto& song : songs) {
@@ -94,6 +96,14 @@ namespace statistics
         });
 
         return vec;
+    }
+
+    std::vector<ListeningTimeRankingEntry> DataFrameView::getArtistsRanked() const {
+        return getListeningTimeRankingFromMap(m_data.m_artistToSongMapping);
+    }
+
+    std::vector<ListeningTimeRankingEntry> DataFrameView::getAlbumsRanked() const {
+        return getListeningTimeRankingFromMap(m_data.m_albumToSongMapping);
     }
 
 } // namespace statistics

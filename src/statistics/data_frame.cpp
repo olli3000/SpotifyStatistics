@@ -51,7 +51,7 @@ namespace statistics
             }
         }
 
-        m_historyEnd = list.back().ts;
+        m_historyEnd = list.back().ts + std::chrono::seconds{1};
     }
 
     void DataFrame::linkArtistsAndAlbumsToSongs() {

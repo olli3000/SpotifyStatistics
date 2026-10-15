@@ -6,11 +6,13 @@
 #include <QVBoxLayout>
 
 #include "ui/small_view_card.hpp"
+#include "ui/small_time_graph.hpp"
+#include "statistics/data_frame_view.hpp"
 #include "statistics/util.hpp"
 
 namespace ui
 {
-    StatisticsView::StatisticsView(statistics::DataFrameView& data, QWidget* parent) 
+    StatisticsView::StatisticsView(statistics::DataFrame& data, QWidget* parent) 
         : QWidget(parent), m_data(data) {
 
         m_stack = new QStackedWidget(this);
@@ -29,21 +31,40 @@ namespace ui
     }
 
     void StatisticsView::createSmallView(QWidget* smallView) {
-        QHBoxLayout* smallViewLayout = new QHBoxLayout(smallView);
-        smallViewLayout->setContentsMargins(20, 20, 20, 20);
-        smallViewLayout->setSpacing(16);
+        QVBoxLayout* smallViewLayout = new QVBoxLayout(smallView);
 
-        SmallViewCard* topSongsCard = new SmallViewCard(m_data, "Top Songs", 1);
-        SmallViewCard* topArtistsCard = new SmallViewCard(m_data, "Top Artists", 2);
+        QHBoxLayout* smallViewLayoutTop = new QHBoxLayout();
+        smallViewLayoutTop->setContentsMargins(20, 20, 20, 20);
+        smallViewLayoutTop->setSpacing(16);
 
-        topSongsCard->fillData(m_data.getSongsRanked(), [](const statistics::SongRankingEntry& entry) {return entry.title;});
-        topArtistsCard->fillData(m_data.getArtistsRanked(), [](const statistics::ArtistRankingEntry& entry) {return entry.name;});
+        QHBoxLayout* smallViewLayoutBottom = new QHBoxLayout();
+        smallViewLayoutBottom->setContentsMargins(20, 20, 20, 20);
+        smallViewLayoutBottom->setSpacing(16);
 
-        smallViewLayout->addWidget(topSongsCard);
-        smallViewLayout->addWidget(topArtistsCard);
+        SmallViewCard* topSongsCard = new SmallViewCard("Top Songs", 1);
+        SmallViewCard* topArtistsCard = new SmallViewCard("Top Artists", 2);
+        SmallViewCard* topAlbumsCard = new SmallViewCard("Top Albums", 3);
+
+        SmallTimeGraph* smallTimeGraph = new SmallTimeGraph(m_data, 4);
+
+        statistics::DataFrameView dfv{m_data};
+        topSongsCard->fillData(dfv.getSongsRanked(), [](const statistics::SongRankingEntry& entry) {return entry.title;});
+        topArtistsCard->fillData(dfv.getArtistsRanked(), [](const statistics::ListeningTimeRankingEntry& entry) {return entry.name;});
+        topAlbumsCard->fillData(dfv.getAlbumsRanked(), [](const statistics::ListeningTimeRankingEntry& entry) {return entry.name;});
+
+        smallViewLayoutTop->addWidget(topSongsCard);
+        smallViewLayoutTop->addWidget(topArtistsCard);
+
+        smallViewLayoutBottom->addWidget(topAlbumsCard);
+        smallViewLayoutBottom->addWidget(smallTimeGraph);
+
+        smallViewLayout->addLayout(smallViewLayoutTop);
+        smallViewLayout->addLayout(smallViewLayoutBottom);
 
         connect(topSongsCard, &SmallViewCard::cardClicked, this, &StatisticsView::switchView);
         connect(topArtistsCard, &SmallViewCard::cardClicked, this, &StatisticsView::switchView);
+        connect(topAlbumsCard, &SmallViewCard::cardClicked, this, &StatisticsView::switchView);
+        connect(smallTimeGraph, &SmallTimeGraph::cardClicked, this, &StatisticsView::switchView);
     }
 
     void StatisticsView::switchView(int index) {
