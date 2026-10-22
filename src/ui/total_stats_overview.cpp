@@ -8,35 +8,45 @@
 
 namespace ui {
 
-    TotalStatsOverview::TotalStatsOverview(statistics::DataFrameView& data, QWidget* parent) : QWidget(parent) {
+    TotalStatsOverview::TotalStatsOverview(statistics::DataFramePool& dataPool, QWidget* parent) : QWidget(parent), m_dataPool(dataPool) {
 
         QHBoxLayout* mainLayout = new QHBoxLayout(this);
         mainLayout->setContentsMargins(20, 20, 20, 20);
         mainLayout->setSpacing(16);
 
-        QWidget* songsCard = createCard("Songs", std::to_string(data.getNumberOfSongs()));
-        QWidget* artistsCard = createCard("Artists", std::to_string(data.getNumberOfArtists()));
-        QWidget* timeCard = createCard("Hours", std::to_string(data.getTotalStreamingTime() / 3'600'000.0));
+        m_songsCard = createCard();
+        m_artistsCard = createCard();
+        m_timeCard = createCard();
 
 
-        mainLayout->addWidget(songsCard);
+        mainLayout->addWidget(m_songsCard);
         mainLayout->addStretch(1);
-        mainLayout->addWidget(artistsCard);
+        mainLayout->addWidget(m_artistsCard);
         mainLayout->addStretch(1);
-        mainLayout->addWidget(timeCard);
+        mainLayout->addWidget(m_timeCard);
     }
 
-    QWidget* TotalStatsOverview::createCard(const std::string& name, const std::string& data) {
+    QWidget* TotalStatsOverview::createCard() {
         QWidget* card = new QWidget(this);
 
         QVBoxLayout* layout = new QVBoxLayout(card);
         layout->setContentsMargins(20, 20, 20, 20);
         layout->setSpacing(16);
 
-        layout->addWidget(new QLabel(name.data()));
-        layout->addWidget(new QLabel(data.data()));
-
         return card;
+    }
+
+    void TotalStatsOverview::fillWithData() {
+        statistics::DataFrameView& data = m_dataPool.getDataFrameViewForRange();
+
+        fillCard(m_songsCard, "Songs", std::to_string(data.getNumberOfSongs()));
+        fillCard(m_artistsCard, "Artists", std::to_string(data.getNumberOfArtists()));
+        fillCard(m_timeCard, "Hours", std::to_string(data.getTotalStreamingTime() / 3'600'000.0));
+    }
+
+    void TotalStatsOverview::fillCard(QWidget* card, const std::string& name, const std::string& data) {
+        card->layout()->addWidget(new QLabel(name.data()));
+        card->layout()->addWidget(new QLabel(data.data()));
     }
 
     void TotalStatsOverview::mousePressEvent(QMouseEvent* event) {

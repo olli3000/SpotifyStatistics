@@ -3,18 +3,18 @@
 #include <QApplication>
 #include <QFile>
 
-// #include "include/json_data_entry.hpp"
-// #include "include/song_history.hpp"
 #include "statistics/data_frame.hpp"
+#include "statistics/data_frame_pool.hpp"
 #include "ui/main_window.hpp"
 
-// using json = nlohmann::json;
 using namespace ui;
 
 int main(int argc, char** argv) {
     std::cout << argv[1] << std::endl;
 
     statistics::DataFrame df{argv[1]};
+    statistics::DataFramePool dfp{};
+    dfp.setData(std::move(df));
 
     QApplication app(argc, argv);
 
@@ -24,10 +24,10 @@ int main(int argc, char** argv) {
         app.setStyleSheet(QString::fromUtf8(file.readAll()));
     }
 
-    MainWindow mainWindow{df};
+    MainWindow mainWindow{dfp};
     mainWindow.show();
 
-    // df.print();
+    mainWindow.fillWithData();
 
     return app.exec();
 }

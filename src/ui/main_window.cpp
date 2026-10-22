@@ -11,7 +11,7 @@
 
 namespace ui
 {
-    MainWindow::MainWindow(statistics::DataFrame& data, QWidget* parent) : QMainWindow(parent) {
+    MainWindow::MainWindow(statistics::DataFramePool& dataPool, QWidget* parent) : QMainWindow(parent) {
         setWindowTitle("Spotify Statistics");
         setMinimumSize(1280, 720);
 
@@ -23,16 +23,19 @@ namespace ui
         mainLayout->setSpacing(16);
 
         m_title = new QLabel("Spotify Statistics");
-
-        statistics::DataFrameView view{data};
         
-        TotalStatsOverview* statsCard = new TotalStatsOverview(view, this);
-        StatisticsView* statisticsView = new StatisticsView(data, this);
+        m_statsCard = new TotalStatsOverview(dataPool, this);
+        m_statisticsView = new StatisticsView(dataPool, this);
         
         mainLayout->addWidget(m_title);
-        mainLayout->addWidget(statsCard);
-        mainLayout->addWidget(statisticsView);
+        mainLayout->addWidget(m_statsCard);
+        mainLayout->addWidget(m_statisticsView);
         mainLayout->addStretch();
+    }
+
+    void MainWindow::fillWithData() {
+        m_statsCard->fillWithData();
+        m_statisticsView->fillWithData();
     }
 
 } // namespace ui

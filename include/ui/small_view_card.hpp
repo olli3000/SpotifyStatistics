@@ -4,8 +4,6 @@
 #include <QString>
 #include <QVBoxLayout>
 
-#include "statistics/data_frame_view.hpp"
-
 namespace ui
 {
     class SmallViewCard : public QWidget {
@@ -15,7 +13,7 @@ namespace ui
         explicit SmallViewCard(const QString& title, int stackIndex, QWidget* parent = nullptr);
 
         template <typename Entry, typename GetName>
-        void fillData(std::vector<Entry> entries, GetName getName) {
+        void fillWithData(std::vector<Entry> entries, GetName getName) {
             int i = 0;
             for (auto& entry : entries) {
                 if (i == 5) break;

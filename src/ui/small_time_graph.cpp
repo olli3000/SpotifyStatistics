@@ -5,8 +5,6 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QBarSeries>
-#include <QChart>
-#include <QBarCategoryAxis>
 #include <QChartView>
 #include <QMouseEvent>
 
@@ -18,47 +16,46 @@ namespace ui
         "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     };
 
-    SmallTimeGraph::SmallTimeGraph(const statistics::DataFrame& data, int stackIndex, QWidget* parent) : QWidget(parent), m_stackIndex(stackIndex), m_data(data) {
+    SmallTimeGraph::SmallTimeGraph(statistics::DataFramePool& dataPool, int stackIndex, QWidget* parent) : QWidget(parent), m_stackIndex(stackIndex), m_dataPool(dataPool) {
 
         QVBoxLayout* mainLayout = new QVBoxLayout(this);
         // mainLayout->setContentsMargins(20, 20, 20, 20);
         // mainLayout->setSpacing(16);
 
-        // QLabel* titleLabel = new QLabel("", this);
+        m_chart = new QChart();
+        m_chart->setTitle("Listening Time");
 
-        QBarSet* set = new QBarSet("Month");
-        QStringList categories{};
-
-        fillChart(set, categories);
-
-
-        QBarSeries* series = new QBarSeries();
-        series->append(set);
-
-        QChart* chart = new QChart();
-        chart->addSeries(series);
-        chart->setTitle("Listening Time");
-        chart->legend()->setVisible(false);
-
-        QBarCategoryAxis* axis = new QBarCategoryAxis();
-        axis->append(categories);
-
-        chart->addAxis(axis, Qt::AlignBottom);
-        series->attachAxis(axis);
-
-        QChartView* chartView = new QChartView(chart);
+        QChartView* chartView = new QChartView(m_chart);
 
         // mainLayout->addWidget(titleLabel);
         mainLayout->addWidget(chartView);
     }
 
+    void SmallTimeGraph::fillWithData() {
+        QBarSet* set = new QBarSet("Month");
+        QStringList categories{};
+
+        fillChart(set, categories);
+
+        QBarSeries* series = new QBarSeries();
+        series->append(set);
+
+        m_chart->addSeries(series);
+        m_chart->legend()->setVisible(false);
+
+        QBarCategoryAxis* axis = new QBarCategoryAxis();
+        axis->append(categories);
+        m_chart->addAxis(axis, Qt::AlignBottom);
+
+        series->attachAxis(axis);
+    }
+
     void SmallTimeGraph::fillChart(QBarSet* set, QStringList& categories) {
         namespace ch = std::chrono;
 
-        auto timeRange = m_data.getFullTimeRange();
+        auto timeRange = m_dataPool.getFullTimeRange();
         ch::year_month_day startDate{ch::floor<ch::days>(timeRange.begin)};
         ch::year_month_day endDate{ch::floor<ch::days>(timeRange.end)};
-        // ch::year_month_day endDate{(ch::year_month_day{ch::floor<ch::days>(timeRange.begin)}.year() + ch::years{1}) / (ch::year_month_day{ch::floor<ch::days>(timeRange.begin)}.month() - ch::months{1}) / 31};
 
         ch::year currentYear = startDate.year();
         ch::year finalYear = endDate.year();
@@ -73,10 +70,9 @@ namespace ui
 
                 statistics::TimeRange range{monthStart, nextMonthStart};
 
-                statistics::DataFrameView dfv{m_data, range};
+                statistics::DataFrameView& dfv = m_dataPool.getDataFrameViewForRange(range);
                 *set << (dfv.getTotalStreamingTime() / 3'600'000.0);
                 categories << monthNames[static_cast<unsigned>(currentMonth.month()) - 1].data();
-                // qDebug() << monthNames[static_cast<unsigned>(currentMonth.month()) - 1].data() << "." << int(currentMonth.year()) << ": " << (dfv.getTotalStreamingTime() / 3'600'000.0);
 
                 currentMonth += ch::months{1};
             }
@@ -88,10 +84,9 @@ namespace ui
 
                 statistics::TimeRange range{yearStart, nextYearStart};
 
-                statistics::DataFrameView dfv{m_data, range};
+                statistics::DataFrameView dfv = m_dataPool.getDataFrameViewForRange(range);
                 *set << (dfv.getTotalStreamingTime() / 3'600'000.0);
                 categories << std::to_string(int(currentYear)).data();
-                // qDebug() << int(currentYear) << ": " << (dfv.getTotalStreamingTime() / 3'600'000.0);
 
                 currentYear += ch::years{1};
             }

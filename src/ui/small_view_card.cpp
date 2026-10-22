@@ -26,8 +26,6 @@ namespace ui
         QWidget* card = new QWidget();
 
         QHBoxLayout* layout = new QHBoxLayout(card);
-        // layout->setContentsMargins(20, 20, 20, 20);
-        // layout->setSpacing(16);
 
         layout->addWidget(new QLabel(std::to_string(place).data(), card));
         layout->addWidget(new QLabel(name.data(), card));

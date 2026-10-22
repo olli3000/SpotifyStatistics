@@ -2,7 +2,7 @@
 
 #include <QWidget>
 
-#include "statistics/data_frame_view.hpp"
+#include "statistics/data_frame_pool.hpp"
 
 namespace ui
 {
@@ -10,7 +10,9 @@ namespace ui
         Q_OBJECT
 
     public:
-        explicit TotalStatsOverview(statistics::DataFrameView& data, QWidget* parent = nullptr);
+        explicit TotalStatsOverview(statistics::DataFramePool& dataPool, QWidget* parent = nullptr);
+
+        void fillWithData();
 
     signals:
         void clicked();
@@ -19,7 +21,14 @@ namespace ui
         void mousePressEvent(QMouseEvent* event) override;
 
     private:
-        QWidget* createCard(const std::string& name, const std::string& data);
+        statistics::DataFramePool& m_dataPool;
+
+        QWidget* m_songsCard;
+        QWidget* m_artistsCard;
+        QWidget* m_timeCard;
+
+        QWidget* createCard();
+        void fillCard(QWidget* card, const std::string& name, const std::string& data);
     };
 
 } // namespace ui

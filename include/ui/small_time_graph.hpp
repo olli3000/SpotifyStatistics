@@ -1,9 +1,11 @@
 #pragma once
 
 #include <QWidget>
+#include <QChart>
 #include <QBarSet>
+#include <QBarCategoryAxis>
 
-#include "statistics/data_frame.hpp"
+#include "statistics/data_frame_pool.hpp"
 
 namespace ui
 {
@@ -11,7 +13,9 @@ namespace ui
         Q_OBJECT
 
     public:
-        explicit SmallTimeGraph(const statistics::DataFrame& data, int stackIndex, QWidget* parent = nullptr);
+        explicit SmallTimeGraph(statistics::DataFramePool& dataPool, int stackIndex, QWidget* parent = nullptr);
+
+        void fillWithData();
 
     signals:
         void cardClicked(int index);
@@ -21,7 +25,9 @@ namespace ui
 
     private:
         int m_stackIndex;
-        const statistics::DataFrame& m_data;
+        statistics::DataFramePool& m_dataPool;
+
+        QChart* m_chart;
 
         void fillChart(QBarSet* set, QStringList& categories);
     };
