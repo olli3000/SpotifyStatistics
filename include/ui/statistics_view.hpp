@@ -7,6 +7,7 @@
 #include "ui/small_time_graph.hpp"
 #include "ui/big_view_base.hpp"
 #include "ui/ranking_view.hpp"
+#include "ui/listening_time_view.hpp"
 
 class QStackedWidget;
 namespace ui
@@ -37,6 +38,7 @@ namespace ui
         BigViewBase* m_bigSongsView;
         BigViewBase* m_bigArtistsView;
         BigViewBase* m_bigAlbumsView;
+        BigViewBase* m_listeningTimeView;
     };
 
 } // namespace ui

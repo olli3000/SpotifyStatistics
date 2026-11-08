@@ -23,6 +23,7 @@ set(FILES
     include/ui/small_time_graph.hpp
     include/ui/big_view_base.hpp
     include/ui/ranking_view.hpp
+    include/ui/listening_time_view.hpp
 
     src/ui/main_window.cpp
     src/ui/total_stats_overview.cpp
@@ -30,7 +31,7 @@ set(FILES
     src/ui/small_view_card.cpp
     src/ui/small_time_graph.cpp
     src/ui/big_view_base.cpp
-    src/ui/ranking_view.cpp
+    src/ui/listening_time_view.cpp
 
     resources/resources.qrc
 )

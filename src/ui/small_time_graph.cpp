@@ -5,7 +5,6 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QBarSeries>
-#include <QChartView>
 #include <QMouseEvent>
 
 #include "statistics/data_frame_view.hpp"
@@ -24,11 +23,12 @@ namespace ui
 
         m_chart = new QChart();
         m_chart->setTitle("Listening Time");
-
-        QChartView* chartView = new QChartView(m_chart);
+        
+        m_chartView = new QChartView(m_chart);
+        m_chartView->viewport()->installEventFilter(this);
 
         // mainLayout->addWidget(titleLabel);
-        mainLayout->addWidget(chartView);
+        mainLayout->addWidget(m_chartView);
     }
 
     void SmallTimeGraph::fillWithData() {
@@ -93,12 +93,14 @@ namespace ui
         }
     }
 
-    void SmallTimeGraph::mousePressEvent(QMouseEvent* event) {
-        if (event->button() == Qt::LeftButton) {
+    bool SmallTimeGraph::eventFilter(QObject* obj, QEvent* event) {
+        if (obj == m_chartView->viewport() && event->type() == QEvent::MouseButtonPress) {
             emit cardClicked(m_stackIndex);
+
+            return false;
         }
 
-        QWidget::mousePressEvent(event);
+        return QWidget::eventFilter(obj, event);
     }
     
 } // namespace ui

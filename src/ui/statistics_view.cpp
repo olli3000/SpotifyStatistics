@@ -24,14 +24,40 @@ namespace ui
         createSmallView(smallView);
 
         
-        m_bigSongsView = new RankingView(dataPool, this, "Songs");
-        m_bigArtistsView = new RankingView(dataPool, this, "Artists");
-        m_bigAlbumsView = new RankingView(dataPool, this, "Albums");
+        m_bigSongsView = new RankingView(dataPool, this, "Songs", 
+            [](statistics::DataFrameView& view) { 
+                return view.getSongsRanked();
+            }, 
+            [](const statistics::SongRankingEntry& entry) {
+                return entry.title;
+            }
+        );
+
+        m_bigArtistsView = new RankingView(dataPool, this, "Artists",
+            [](statistics::DataFrameView& view) {
+                return view.getArtistsRanked();
+            },
+            [](const statistics::ListeningTimeRankingEntry& entry) {
+                return entry.name;
+            }
+        );
+
+        m_bigAlbumsView = new RankingView(dataPool, this, "Albums",
+            [](statistics::DataFrameView& view) {
+                return view.getAlbumsRanked();
+            },
+            [](const statistics::ListeningTimeRankingEntry& entry) {
+                return entry.name;
+            }
+        );
+
+        m_listeningTimeView = new ListeningTimeView(dataPool, this);
         
         m_stack->addWidget(smallView);
         m_stack->addWidget(m_bigSongsView);
         m_stack->addWidget(m_bigArtistsView);
         m_stack->addWidget(m_bigAlbumsView);
+        m_stack->addWidget(m_listeningTimeView);
     }
 
     void StatisticsView::createSmallView(QWidget* smallView) {
@@ -54,8 +80,8 @@ namespace ui
         smallViewLayoutTop->addWidget(m_topSongsCard);
         smallViewLayoutTop->addWidget(m_topArtistsCard);
 
-        smallViewLayoutBottom->addWidget(m_topAlbumsCard);
-        smallViewLayoutBottom->addWidget(m_smallTimeGraph);
+        smallViewLayoutBottom->addWidget(m_topAlbumsCard, 1);
+        smallViewLayoutBottom->addWidget(m_smallTimeGraph, 1);
 
         smallViewLayout->addLayout(smallViewLayoutTop);
         smallViewLayout->addLayout(smallViewLayoutBottom);
@@ -77,10 +103,10 @@ namespace ui
         m_bigSongsView->fillWithData();
         m_bigArtistsView->fillWithData();
         m_bigAlbumsView->fillWithData();
+        m_listeningTimeView->fillWithData();
     }
 
     void StatisticsView::switchView(int index) {
-        qDebug("%d clicked", index);
         m_stack->setCurrentIndex(index);
     }
 

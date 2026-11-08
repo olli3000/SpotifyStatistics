@@ -30,7 +30,7 @@ namespace ui
         layout->addWidget(new QLabel(std::to_string(place).data(), card));
         layout->addWidget(new QLabel(name.data(), card));
         layout->addStretch();
-        layout->addWidget(new QLabel(QString("%1 %2").arg(std::to_string(listeningTime / 3'600'600).data()).arg("h"), card));
+        layout->addWidget(new QLabel(QString("%1 %2").arg(std::to_string(listeningTime / 3'600'600.0).data()).arg("h"), card));
 
         return card;
     }

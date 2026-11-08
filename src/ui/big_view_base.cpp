@@ -13,9 +13,14 @@ namespace ui
         mainLayout->setContentsMargins(20, 20, 20, 20);
         mainLayout->setSpacing(16);
 
+        QHBoxLayout* topBarLayout = new QHBoxLayout();
+
         QPushButton* backButton = new QPushButton("Back", this);
         connect(backButton, &QPushButton::clicked, parentView, &StatisticsView::selectMainView);
-        mainLayout->addWidget(backButton);
+        topBarLayout->addWidget(backButton);
+        topBarLayout->addStretch();
+
+        mainLayout->addLayout(topBarLayout);
     }
 
     BigViewBase::~BigViewBase() {}

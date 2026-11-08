@@ -2,8 +2,10 @@
 
 #include <QWidget>
 #include <QChart>
+#include <QChartView>
 #include <QBarSet>
 #include <QBarCategoryAxis>
+#include <QEvent>
 
 #include "statistics/data_frame_pool.hpp"
 
@@ -20,16 +22,15 @@ namespace ui
     signals:
         void cardClicked(int index);
 
-    protected:
-        void mousePressEvent(QMouseEvent* event) override;
-
     private:
         int m_stackIndex;
         statistics::DataFramePool& m_dataPool;
 
         QChart* m_chart;
+        QChartView* m_chartView;
 
         void fillChart(QBarSet* set, QStringList& categories);
+        bool eventFilter(QObject* obj, QEvent* event) override;
     };
     
 } // namespace ui

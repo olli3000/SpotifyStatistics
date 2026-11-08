@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 
 #include "statistics/data_frame_pool.hpp"
+#include "statistics/util.hpp"
 
 namespace ui
 {
@@ -16,6 +17,7 @@ namespace ui
         virtual ~BigViewBase() = 0;
 
         virtual void fillWithData() = 0;
+        virtual void fillWithData(statistics::TimeRange& timeRange) = 0;
 
     protected:
         statistics::DataFramePool& m_dataPool;
